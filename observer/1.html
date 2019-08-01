@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="1.js"></script>
+</head>
+<body>
+
+    <h3>
+        观察者模式
+    </h3>
+    <p>
+        比较概念的解释是，目标和观察者是基类，目标提供维护观察者的一系列方法，观察者提供更新接口。<br><br>
+        具体观察者和具体目标继承各自的基类，然后具体观察者把自己注册到具体目标里，在具体目标发生变化时候，调度观察者的更新方法
+    </p>
+    <button id="addNewObserver">Add New Observer checkbox</button>
+    <input id="mainCheckbox" type="checkbox">
+    <div id="observerContainer"></div>
+</body>
+<script>
+    //引用DOM元素
+    var controlCheckbox = document.getElementById("mainCheckbox"),
+        addBtn = document.getElementById('addNewObserver'),
+        container = document.getElementById("observerContainer");
+
+    //具体目标 Concrete Subject
+
+    //利用Subject扩展controlCheckbox
+    extend(new Subject(),controlCheckbox);
+
+    //点击checkbox会触发通知到观察者上
+    controlCheckbox["onclick"]=new Function("controlCheckbox.Notify(controlCheckbox.checked)");
+    addBtn["onclick"] = AddNewObserver;
+
+    //具体观察者 Concrete Observer
+    function AddNewObserver() {
+        //创建需要添加的新checkbox
+        var check = document.createElement("input");
+        check.type = "checkbox";
+
+        //利用observer类扩展checkbox
+        extend(new Observer(),check);
+        //重写自定义的更新行为
+        check.Update = function (value) {
+            this.checked = value;
+        };
+        //为主subject的观察者列表添加新的观察者
+        controlCheckbox.AddObserver(check);
+
+        //将观察者附件到容器上
+        container.appendChild(check);
+    }
+
+</script>
+</html>
